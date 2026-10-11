@@ -1,0 +1,114 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">Recruiter Dashboard</h2>
+        <p class="text-muted">
+            Track applications received for your job postings.
+        </p>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Applications</p>
+                    <h2>{{ total_applications }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Pending</p>
+                    <h2>{{ pending_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Shortlisted</p>
+                    <h2>{{ shortlisted_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Rejected</p>
+                    <h2>{{ rejected_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Hired</p>
+                    <h2>{{ hired_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            My Job Postings
+        </div>
+
+        <div class="card-body">
+
+            {% if jobs %}
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Industry</th>
+                                <th>Applications</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for job in jobs %}
+                            <tr>
+                                <td>{{ job.title }}</td>
+                                <td>{{ job.industry }}</td>
+                                <td>{{ job.applications|length }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-primary"
+                                       href="{{ url_for('show_applications', jobid=job.id) }}">
+                                        View Applicants
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">
+                    You have not posted any jobs yet.
+                </p>
+            {% endif %}
+
+            <a href="{{ url_for('post_jobs') }}"
+               class="btn btn-primary mt-3">
+                Post a New Job
+            </a>
+
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

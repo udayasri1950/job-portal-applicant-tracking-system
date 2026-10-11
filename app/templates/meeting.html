@@ -1,0 +1,164 @@
+```html
+{% extends "layout.html" %}
+
+{% block title %}Interview Room | Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Interview Heading -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Interview Room</h1>
+
+        <p class="text-muted">
+            Welcome, {{ current_user.username }}.
+            Get ready for your interview.
+        </p>
+
+        <span class="badge bg-primary" id="room-status">
+            Ready to join
+        </span>
+    </div>
+
+    <!-- Meeting Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white
+                    d-flex justify-content-between align-items-center">
+            <span>Live Interview</span>
+            <span>Application: {{ application_id }}</span>
+        </div>
+
+        <div class="card-body">
+
+            <div
+                id="interview-message"
+                class="alert alert-info"
+                role="status"
+                aria-live="polite"
+            >
+                Click Join Interview to enter the video meeting.
+            </div>
+
+            <!-- Meeting Controls -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+
+                <button
+                    id="join-btn"
+                    class="btn btn-primary"
+                    type="button"
+                >
+                    Join Interview
+                </button>
+
+                <button
+                    id="end-btn"
+                    class="btn btn-danger"
+                    type="button"
+                    disabled
+                >
+                    Leave Interview
+                </button>
+
+            </div>
+
+            <!-- Embedded Jitsi Meeting -->
+            <div id="meeting-frame" class="d-none">
+                <iframe
+                    id="jitsi-frame"
+                    title="Job Portal Video Interview"
+                    allow="camera; microphone; fullscreen; display-capture; autoplay"
+                    allowfullscreen
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    style="
+                        width: 100%;
+                        height: 650px;
+                        border: 0;
+                        border-radius: 10px;
+                        background: #f8f9fa;
+                    "
+                ></iframe>
+            </div>
+
+            <p class="small text-muted mt-3 mb-0">
+                Both the company and the applicant must join the same
+                interview room. Camera and microphone access may be requested.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- Interview Checklist -->
+    <div class="card shadow-sm border-0 mt-3">
+        <div class="card-header">
+            <strong>Interview Checklist</strong>
+        </div>
+
+        <div class="card-body">
+            <ul class="mb-0">
+                <li>Allow camera and microphone access.</li>
+                <li>Use a quiet place and a stable internet connection.</li>
+                <li>Keep your resume ready.</li>
+                <li>Join the meeting at the scheduled time.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    const applicationId = {{ application_id | tojson }};
+    const roomName = "JobPortalInterview-" + applicationId;
+
+    const joinBtn = document.getElementById("join-btn");
+    const endBtn = document.getElementById("end-btn");
+    const frame = document.getElementById("jitsi-frame");
+    const frameContainer = document.getElementById("meeting-frame");
+    const message = document.getElementById("interview-message");
+    const status = document.getElementById("room-status");
+
+    // Use the same room URL for both interview participants.
+    const meetingUrl =
+        "https://meet.jit.si/" + encodeURIComponent(roomName);
+
+    joinBtn.addEventListener("click", function () {
+        frame.src = meetingUrl;
+        frameContainer.classList.remove("d-none");
+
+        joinBtn.disabled = true;
+        endBtn.disabled = false;
+
+        status.textContent = "Opening meeting";
+        status.className = "badge bg-success";
+
+        message.className = "alert alert-info";
+        message.textContent =
+            "The meeting is loading. Allow camera and microphone access if requested.";
+
+        frame.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    });
+
+    endBtn.addEventListener("click", function () {
+        // Stop the embedded meeting by unloading its frame.
+        frame.src = "about:blank";
+        frameContainer.classList.add("d-none");
+
+        joinBtn.disabled = false;
+        endBtn.disabled = true;
+
+        status.textContent = "Left meeting";
+        status.className = "badge bg-secondary";
+
+        message.className = "alert alert-secondary";
+        message.textContent =
+            "You left the embedded meeting. Select Join Interview to enter again.";
+    });
+})();
+</script>
+{% endblock %}
+```

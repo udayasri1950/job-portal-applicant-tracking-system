@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Job Portal | Find Your Next Opportunity{% endblock title %}</title>
+    <meta name="description" content="Discover job opportunities and manage applications with Job Portal.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary:#2563eb; --primary-hover:#1d4ed8; --navy:#14213d;
+            --navy-light:#20365b; --body-bg:#f4f7fc; --text:#243247;
+            --muted:#68768b; --border:#e1e8f2;
+        }
+        * { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            min-height:100vh; margin:0; display:flex; flex-direction:column;
+            font-family:"Segoe UI",Arial,sans-serif; color:var(--text);
+            background:var(--body-bg); line-height:1.6;
+        }
+        a { text-decoration:none; }
+        .site-navbar {
+            position:relative; z-index:10; padding:12px 0;
+            background:linear-gradient(110deg,var(--navy),var(--navy-light));
+            border-bottom:1px solid rgba(255,255,255,.08);
+            box-shadow:0 4px 18px rgba(15,23,42,.12);
+        }
+        .navbar-inner { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+        .navbar-brand {
+            display:inline-flex; align-items:center; gap:11px; margin:0; padding:3px 0;
+            color:#fff!important; white-space:nowrap;
+        }
+        .brand-mark {
+            display:inline-flex; align-items:center; justify-content:center;
+            width:42px; height:42px; flex:0 0 42px; border-radius:12px;
+            color:#fff; background:rgba(96,165,250,.18);
+            border:1px solid rgba(147,197,253,.28); font-size:1.15rem;
+        }
+        .brand-copy { display:flex; flex-direction:column; line-height:1.15; }
+        .brand-title { font-size:1.32rem; font-weight:800; letter-spacing:-.45px; }
+        .brand-tagline { margin-top:5px; color:#c7d7f2; font-size:.72rem; letter-spacing:.15px; }
+        .nav-actions {
+            display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px;
+        }
+        .nav-actions .btn {
+            display:inline-flex; align-items:center; justify-content:center; gap:7px;
+            margin:0; padding:9px 13px; border-radius:9px; font-size:.88rem;
+            font-weight:650; white-space:nowrap;
+            transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease;
+        }
+        .nav-actions .btn:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(0,0,0,.12); }
+        .nav-actions .btn-light { color:#23324a; background:#fff; border-color:#fff; }
+        .nav-actions .btn-light:hover { color:var(--primary-hover); background:#edf4ff; border-color:#edf4ff; }
+        .nav-actions .btn-primary { background:var(--primary); border-color:var(--primary); }
+        .nav-actions .btn-primary:hover { background:var(--primary-hover); border-color:var(--primary-hover); }
+        .nav-actions .btn-danger { background:#dc3545; border-color:#dc3545; }
+        .user-greeting {
+            display:inline-flex; align-items:center; gap:8px; max-width:220px; padding:8px 11px;
+            border:1px solid rgba(255,255,255,.2); border-radius:9px; color:#fff;
+            background:rgba(255,255,255,.08); font-size:.85rem; white-space:nowrap;
+        }
+        .user-name {
+            display:inline-block; max-width:125px; overflow:hidden; text-overflow:ellipsis;
+            vertical-align:bottom; font-weight:700;
+        }
+        /* Professional hero banner */
+        .hero-banner {
+            padding: 58px 0;
+            background: linear-gradient(135deg, #eaf2ff 0%, #ffffff 58%, #e8f0ff 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-content {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .hero-label {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 6px 13px;
+            border-radius: 999px;
+            color: #1d4ed8;
+            background: #dbeafe;
+            font-size: .76rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+        }
+        .hero-content h1 {
+            max-width: 850px;
+            margin: 0 auto 16px;
+            color: var(--navy);
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+        .hero-content p {
+            max-width: 700px;
+            margin: 0 auto 24px;
+            color: #64748b;
+            font-size: 1.05rem;
+        }
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .hero-actions .btn {
+            padding: 11px 19px;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+        .hero-actions .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .hero-actions .btn-primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+        .hero-note {
+            margin-top: 18px !important;
+            margin-bottom: 0 !important;
+            font-size: .86rem !important;
+        }
+        main { width:100%; flex:1 0 auto; padding-top:34px!important; padding-bottom:42px!important; }
+        main h1,main h2,main h3,main h4 { color:var(--navy); letter-spacing:-.35px; }
+        .card {
+            overflow:hidden; border:1px solid var(--border); border-radius:14px;
+            background:#fff; box-shadow:0 5px 18px rgba(15,23,42,.055);
+        }
+        .card-header { font-weight:700; }
+        .table { --bs-table-bg:#fff; border-color:var(--border); vertical-align:middle; }
+        .table th { font-weight:700; white-space:nowrap; }
+        .btn { border-radius:8px; font-weight:600; }
+        .form-control,.form-select { min-height:43px; border-color:#d4deeb; border-radius:9px; padding:9px 12px; }
+        textarea.form-control { min-height:auto; }
+        .form-control:focus,.form-select:focus {
+            border-color:#8bb4ff; box-shadow:0 0 0 .2rem rgba(37,99,235,.13);
+        }
+        .alert { border:1px solid transparent; border-radius:11px; }
+        .site-footer { width:100%; flex:0 0 auto; padding:0 0 22px; color:var(--muted); }
+        .footer-inner { padding-top:20px; border-top:1px solid #d8e1ed; text-align:center; }
+        .footer-title { margin:0; color:#52627a; font-size:.88rem; font-weight:650; }
+        .footer-subtitle { margin:4px 0 0; font-size:.78rem; }
+        @media (max-width:992px) {
+            .navbar-inner { flex-direction:column; align-items:stretch; gap:12px; }
+            .navbar-brand { justify-content:center; }
+            .nav-actions { justify-content:center; }
+        }
+        @media (max-width:576px) {
+            .site-navbar { padding:10px 0; }
+            .brand-title { font-size:1.18rem; }
+            .brand-tagline { font-size:.68rem; }
+            .brand-mark { width:38px; height:38px; flex-basis:38px; }
+            .nav-actions { gap:6px; }
+            .nav-actions .btn { padding:7px 9px; font-size:.78rem; }
+            .user-greeting { padding:7px 9px; font-size:.78rem; }
+            .hero-banner { padding:38px 0; }
+            .hero-content h1 { letter-spacing:-.5px; }
+            .hero-content p { font-size:.95rem; }
+            .hero-actions { gap:8px; }
+            .hero-actions .btn { padding:9px 13px; font-size:.9rem; }
+            main { padding-top:24px!important; padding-bottom:30px!important; }
+            .table { font-size:.86rem; }
+        }
+        @media (prefers-reduced-motion:reduce) {
+            html { scroll-behavior:auto; }
+            *,*::before,*::after { transition-duration:.01ms!important; animation-duration:.01ms!important; animation-iteration-count:1!important; }
+        }
+    </style>
+    {% block extra_head %}{% endblock extra_head %}
+</head>
+<body>
+    <!-- Main navigation -->
+    <header>
+        <nav class="navbar navbar-dark site-navbar">
+            <div class="container navbar-inner">
+                <a href="{{ url_for('show_jobs') }}" class="navbar-brand" aria-label="Job Portal home">
+                    <span class="brand-mark" aria-hidden="true"><i class="fa fa-briefcase"></i></span>
+                    <span class="brand-copy">
+                        <span class="brand-title">Job Portal</span>
+                        <span class="brand-tagline">Find opportunities. Build your future.</span>
+                    </span>
+                </a>
+
+                <div class="nav-actions">
+                    {% if current_user.is_authenticated %}
+                        <span class="user-greeting" title="Currently logged-in account">
+                            <i class="fa fa-user-circle" aria-hidden="true"></i>
+                            <span>Welcome, <span class="user-name">{{ current_user.username }}</span></span>
+                        </span>
+
+                        {% if current_user.usertype == 'Company' %}
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+                                <i class="fa fa-dashboard" aria-hidden="true"></i> Dashboard
+                            </a>
+                            <a href="{{ url_for('posted_jobs') }}" class="btn btn-light">
+                                <i class="fa fa-list-alt" aria-hidden="true"></i> My Jobs
+                            </a>
+                            <a href="{{ url_for('post_jobs') }}" class="btn btn-light">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> Post a Job
+                            </a>
+                        {% elif current_user.usertype == 'Job Seeker' %}
+                            <a href="{{ url_for('show_jobs') }}" class="btn btn-light">
+                                <i class="fa fa-search" aria-hidden="true"></i> Browse Jobs
+                            </a>
+                            <a href="{{ url_for('my_applications') }}" class="btn btn-light">
+                                <i class="fa fa-file-text-o" aria-hidden="true"></i> My Applications
+                            </a>
+                        {% endif %}
+
+                        <a href="{{ url_for('review') }}" class="btn btn-light">
+                            <i class="fa fa-star-o" aria-hidden="true"></i> Post a Review
+                        </a>
+                        <a href="{{ url_for('logout') }}" class="btn btn-danger">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i> Log out
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('register') }}" class="btn btn-light">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-primary">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i> Log in
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Professional career banner: no review carousel or sample testimonials -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-label">
+                    <i class="fa fa-compass me-1" aria-hidden="true"></i>
+                    CAREER OPPORTUNITIES
+                </span>
+
+                <h1>Build Your Career With the Right Opportunity</h1>
+
+                <p>
+                    Discover relevant job openings, apply with confidence, and track
+                    your application progress in one convenient place.
+                </p>
+
+                <div class="hero-actions">
+                    {% if current_user.is_authenticated and current_user.usertype == 'Job Seeker' %}
+                        <a href="{{ url_for('show_jobs') }}" class="btn btn-primary">
+                            <i class="fa fa-search me-1" aria-hidden="true"></i>
+                            Browse Jobs
+                        </a>
+                        <a href="{{ url_for('my_applications') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-file-text-o me-1" aria-hidden="true"></i>
+                            Track Applications
+                        </a>
+                    {% elif current_user.is_authenticated and current_user.usertype == 'Company' %}
+                        <a href="{{ url_for('post_jobs') }}" class="btn btn-primary">
+                            <i class="fa fa-plus-circle me-1" aria-hidden="true"></i>
+                            Post a Job
+                        </a>
+                        <a href="{{ url_for('posted_jobs') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-list-alt me-1" aria-hidden="true"></i>
+                            Manage My Jobs
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('show_jobs') }}" class="btn btn-primary">
+                            <i class="fa fa-search me-1" aria-hidden="true"></i>
+                            Explore Jobs
+                        </a>
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-user-plus me-1" aria-hidden="true"></i>
+                            Create Account
+                        </a>
+                    {% endif %}
+                </div>
+
+                <p class="hero-note">
+                    <i class="fa fa-check-circle me-1" aria-hidden="true"></i>
+                    One place to discover jobs and manage applications.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3" aria-live="polite">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show text-center mx-auto"
+                         role="alert" style="max-width:850px;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Page-specific content -->
+    <main class="container">
+        {% block content %}{% endblock content %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p class="footer-title">Job Portal &amp; Applicant Tracking System</p>
+            <p class="footer-subtitle">Connecting talent with opportunity.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_scripts %}{% endblock extra_scripts %}
+</body>
+</html>

@@ -1,0 +1,352 @@
+
+{% extends "layout.html" %}
+
+{% block title %}Job Applications | Job Portal{% endblock title %}
+
+{% block content %}
+
+<section class="container py-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Job Applications</h2>
+        <p class="text-muted">
+            Review applicants and manage their application status and interviews.
+        </p>
+    </div>
+
+    {% if applications %}
+
+    <!-- Search and filter -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label for="applicantSearch" class="form-label">
+                        Search Applicants
+                    </label>
+                    <input
+                        type="text"
+                        id="applicantSearch"
+                        class="form-control"
+                        placeholder="Search username, degree, or industry">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="statusFilter" class="form-label">
+                        Filter by Status
+                    </label>
+                    <select id="statusFilter" class="form-select">
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="hired">Hired</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button
+                        type="button"
+                        id="clearFilters"
+                        class="btn btn-outline-secondary w-100">
+                        Clear
+                    </button>
+                </div>
+
+            </div>
+
+            <p class="text-muted small mt-3 mb-0">
+                Showing <strong id="visibleCount">{{ applications|length }}</strong>
+                of {{ applications|length }} applications
+            </p>
+        </div>
+    </div>
+
+    <!-- Applicant cards -->
+    <div class="row g-4" id="applicationsList">
+
+        {% for application in applications %}
+
+        {% set current_status = application.status or 'Pending' %}
+
+        <div
+            class="col-12 col-lg-6 application-card"
+            data-username="{{ application.application_submiter.username|lower }}"
+            data-degree="{{ application.degree|default('', true)|lower }}"
+            data-industry="{{ application.industry|default('', true)|lower }}"
+            data-status="{{ current_status|lower }}">
+
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body p-4">
+
+                    <!-- Applicant information -->
+                    <div class="d-flex justify-content-between align-items-start mb-3 gap-2">
+                        <div>
+                            <span class="badge bg-primary mb-2">
+                                {{ application.industry }}
+                            </span>
+
+                            <h5 class="card-title mb-1">
+                                {{ application.application_submiter.username }}
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Application #{{ application.id }}
+                            </p>
+                        </div>
+
+                        <div>
+                            {% if current_status == 'Shortlisted' %}
+                                <span class="badge bg-success">Shortlisted</span>
+                            {% elif current_status == 'Rejected' %}
+                                <span class="badge bg-danger">Rejected</span>
+                            {% elif current_status == 'Hired' %}
+                                <span class="badge bg-primary">Hired</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Application details -->
+                    <p class="mb-2">
+                        <strong>Degree:</strong>
+                        {{ application.degree[1:] if application.degree else 'Not specified' }}
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Experience:</strong>
+                        {{ application.experience }}
+                        year{% if application.experience != 1 %}s{% endif %}
+                    </p>
+
+                    <p class="mb-3">
+                        <strong>Applied on:</strong>
+                        {{ application.date_posted.strftime('%d-%m-%Y') if application.date_posted else 'Not available' }}
+                    </p>
+
+                    <!-- Cover letter -->
+                    <div class="mb-3">
+                        <strong>Cover Letter</strong>
+                        <p
+                            class="text-muted mt-1"
+                            style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ application.cover_letter }}</p>
+                    </div>
+
+                    <!-- Resume and interview links -->
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+
+                        <a
+                            href="{{ url_for('resume', id=application.id) }}"
+                            class="btn btn-outline-primary btn-sm"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            <i class="fa fa-file-pdf-o"></i>
+                            View CV / Resume
+                        </a>
+
+                        {% if application.interview_enabled %}
+                            <a
+                                href="{{ url_for('meeting', application_id=application.id) }}"
+                                class="btn btn-success btn-sm">
+                                <i class="fa fa-video-camera"></i>
+                                Open Interview
+                            </a>
+                        {% else %}
+                            <span class="badge bg-secondary align-content-center">
+                                Interview Not Scheduled
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Update application status -->
+                    <form
+                        method="POST"
+                        action="{{ url_for('update_application_status', application_id=application.id) }}">
+
+                        <label
+                            for="status-{{ application.id }}"
+                            class="form-label fw-semibold">
+                            Update Application Status
+                        </label>
+
+                        <div class="input-group">
+                            <select
+                                class="form-select"
+                                name="status"
+                                id="status-{{ application.id }}"
+                                required>
+
+                                <option value="Pending"
+                                    {% if current_status == 'Pending' %}selected{% endif %}>
+                                    Pending
+                                </option>
+
+                                <option value="Shortlisted"
+                                    {% if current_status == 'Shortlisted' %}selected{% endif %}>
+                                    Shortlisted
+                                </option>
+
+                                <option value="Rejected"
+                                    {% if current_status == 'Rejected' %}selected{% endif %}>
+                                    Rejected
+                                </option>
+
+                                <option value="Hired"
+                                    {% if current_status == 'Hired' %}selected{% endif %}>
+                                    Hired
+                                </option>
+
+                            </select>
+
+                            <button type="submit" class="btn btn-primary">
+                                Save Status
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <!-- Schedule interview -->
+                    <form
+                        method="POST"
+                        action="{{ url_for('schedule_interview', application_id=application.id) }}"
+                        class="mt-3">
+
+                        <label
+                            for="interview_datetime_{{ application.id }}"
+                            class="form-label fw-semibold">
+                            Schedule Interview
+                        </label>
+
+                        {% if application.interview_enabled and application.interview_datetime %}
+                            <p class="small text-success">
+                                Currently scheduled for:
+                                {{ application.interview_datetime.strftime('%d %b %Y, %I:%M %p') }}
+                            </p>
+                        {% else %}
+                            <p class="small text-muted">
+                                No interview scheduled yet.
+                            </p>
+                        {% endif %}
+
+                        <input
+                            type="datetime-local"
+                            id="interview_datetime_{{ application.id }}"
+                            name="interview_datetime"
+                            class="form-control mb-2"
+                            required>
+
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            {% if application.interview_enabled %}
+                                Reschedule Interview
+                            {% else %}
+                                Schedule Interview
+                            {% endif %}
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div
+        id="noMatchingApplications"
+        class="alert alert-info text-center mt-4 d-none">
+        No applications match your search or selected status.
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-info text-center">
+        <i class="fa fa-info-circle"></i>
+        No applications have been submitted for this job yet.
+    </div>
+
+    {% endif %}
+
+    <!-- Back button -->
+    <div class="text-center mt-4">
+        <a
+            href="{{ url_for('posted_jobs') }}"
+            class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left"></i>
+            Back to Posted Jobs
+        </a>
+    </div>
+
+</section>
+
+<!-- Search and filter functionality -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("applicantSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const clearButton = document.getElementById("clearFilters");
+    const cards = document.querySelectorAll(".application-card");
+    const visibleCount = document.getElementById("visibleCount");
+    const noResults = document.getElementById("noMatchingApplications");
+
+    if (!searchInput || !statusFilter || !clearButton) {
+        return;
+    }
+
+    function filterApplications() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const selectedStatus = statusFilter.value;
+        let visible = 0;
+
+        cards.forEach(function (card) {
+            const searchableText = [
+                card.dataset.username || "",
+                card.dataset.degree || "",
+                card.dataset.industry || ""
+            ].join(" ");
+
+            const matchesSearch = searchableText.includes(searchTerm);
+            const matchesStatus =
+                selectedStatus === "all" ||
+                card.dataset.status === selectedStatus;
+
+            const showCard = matchesSearch && matchesStatus;
+
+            card.classList.toggle("d-none", !showCard);
+
+            if (showCard) {
+                visible++;
+            }
+        });
+
+        if (visibleCount) {
+            visibleCount.textContent = visible;
+        }
+
+        if (noResults) {
+            noResults.classList.toggle("d-none", visible !== 0);
+        }
+    }
+
+    searchInput.addEventListener("input", filterApplications);
+    statusFilter.addEventListener("change", filterApplications);
+
+    clearButton.addEventListener("click", function () {
+        searchInput.value = "";
+        statusFilter.value = "all";
+        filterApplications();
+    });
+});
+</script>
+
+{% endblock content %}
