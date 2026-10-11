@@ -1,70 +1,79 @@
-# Python_Flask_Job_Portal
-Job Portal Web App with Flask Python
+# Python Flask Job Portal
 
-Python 3.9
+A Job Portal Web Application built using Python and Flask.
 
-## Local Environment
+## Requirements
 
-### Install
+- Python 3.9 or compatible version
+- Packages listed in `requirements.txt`
 
-1- Create a virtual environment
+## Local Environment Setup
 
+### 1. Create a virtual environment
 
-```virtualenv venv```
+```bash
+python -m venv venv
+```
 
-or 
+### 2. Activate the virtual environment
 
-```python -m venv venv```
+**Windows (PowerShell):**
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-2- Activate it
+**Windows (Command Prompt):**
+```cmd
+venv\Scripts\activate.bat
+```
 
-```source venv/Scripts/activate``` (Windows)
+**Linux:**
+```bash
+source venv/bin/activate
+```
 
-```source venv/bin/activate``` (Linux)
+### 3. Install dependencies
 
-3- Clone the repository and install the packages in the virtual env:
+```bash
+pip install -r requirements.txt
+```
 
-```pip install -r requirements.txt```
+### 4. Configure environment variables
 
-4- Run application
+Create a `.env` file in the project root and configure the required Flask secret key and MySQL database settings.
 
-```python run.py```
+Do not upload your `.env` file or database credentials to GitHub.
 
+### 5. Run the application
 
-# Screenshots
+```bash
+python run.py
+```
 
-### Home
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/home_before_login_jobseeker.png)
+Open the local address shown in your terminal, usually:
 
+`http://127.0.0.1:5000/`
 
-## Sign up
-You can either sign up as company or a person who is looking for a job
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/sign_up.png)
+## Features
 
-## Login
-You can either log in as company or a person who is looking for a job
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/login.png)
+- User registration and login
+- Separate access for job seekers and companies
+- Job posting and job searching
+- Job applications and resume uploads
+- Application tracking
+- Interview scheduling
+- Website reviews
 
-## Home after a job seeker logs in
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/home_after_login_jobseeker.png)
+## Technologies Used
 
-## Applying for a job
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/application.png)
+- Python
+- Flask
+- HTML
+- CSS
+- JavaScript
+- MySQL
+- SQLAlchemy
 
-## Post a review about website
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/post_review.png)
+## License
 
-## Home after you log in as a company
-The company will only see those jobs which they have posted. 
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/home_for_company_after_login.png)
-
-## See as a company who has applied on you posted job
-Only those who have applied on your specific posted jobs will be seen here
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/see_applicants.png)
-
-## See resume of selected applicant
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/see_resume_of_applicants.png)
-
-## Start interview with the applicant.
-This webpage is under working in which company can have interview with the applicant on this same website.
-![alt text](https://github.com/hamziqureshi/Python_Flask_Job_Portal/blob/master/Screenshots/start_interview.png)
+This project is distributed under the license included in this repository.
